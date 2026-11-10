@@ -1,0 +1,29 @@
+{
+  "version": "syn-v1",
+  "seed": 42,
+  "frozen_today": "2026-10-10",
+  "counts": {
+    "golden": 200,
+    "multiturn": 50,
+    "adversarial": 80
+  },
+  "files": {
+    "species.csv": "15cf6c84ebffeb97b7bda6907ad755e23e61c1f85ac903b4115e3f9bc7e3a6dd",
+    "rules.csv": "fb889188b15cf78fea4c37deee8af56b85ab4745a767349795608d28cf11ab5d",
+    "fixtures/conditions.json": "cbc7cf7881c8a797433ddaabe7fa59027b15e09890002503229abc7e8f11b17d",
+    "fixtures/poisoned_docs.jsonl": "7f14030c6c7fbb9f4e8c102e4770b798c6330646bc1c6f977449a69c61413249",
+    "datasets/adversarial.jsonl": "359c77f9ae174a8845259b85aa10fa0e83ef402a57727c82312cb7f16c9ab2b0",
+    "datasets/boundary.jsonl": "531baa99a220a06dc7c2a99f49b1e5fcd1281ca28f593fb39b20a8dacd283952",
+    "datasets/golden.jsonl": "91722c74177aee93d942aebedbb9fd261c69beea69e3da2f16d116ee49609290",
+    "datasets/identify.jsonl": "a71f72ee94841c75223c109265487c6672e9189665c2ae5472942ad5c42d680b",
+    "datasets/knowledge_fishbase.jsonl": "6c2d077768385be4d7fe0167f46acffa8a0b34ff2aed9924ae9248231609de81",
+    "datasets/knowledge_rules.jsonl": "fda33e21e1ed46bd4848a1e46107d606b6acbbf64ec3613c3200090d59e80fe2",
+    "datasets/multihop.jsonl": "6a88944d2ed00a23ee326a57c7497bd6f39fc3ba439d6a7c2bbc8a390a2b9424",
+    "datasets/multiturn.jsonl": "c6b33eaf50d781b5417380c70f4100eb4317fbf5d0eb8cccaca27fc2b3df5afe"
+  },
+  "data_mode": "synthetic",
+  "data_snapshot": {
+    "images.csv": "e4adda62345cbcf5e6b4efb99ebe3dddf2ede81fbb02caa4d0302c8a4677d313",
+    "species_facts.csv": "ce3389c21de293f87aba96bafa00abf6bce3c62eb9d6a8509c20f758a5d27ea1"
+  }
+}

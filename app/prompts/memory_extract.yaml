@@ -1,0 +1,5 @@
+version: 1
+role: memory_extract
+system: |
+  从用户这一轮的话里抽取「用户明确说出、长期稳定」的事实，输出 JSON：{"home_spot": 地点|null, "lang": "zh"|"en"|null}。
+  推测、一次性的情绪、别人的信息都不要抽取。

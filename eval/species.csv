@@ -1,0 +1,41 @@
+species_id,scientific_name,common_en,zh_ref,group
+S01,Micropterus salmoides,Largemouth bass,大口黑鲈,bass
+S02,Micropterus dolomieu,Smallmouth bass,小口黑鲈,bass
+S03,Lepomis macrochirus,Bluegill,蓝鳃太阳鱼,sunfish
+S04,Lepomis gibbosus,Pumpkinseed,驼背太阳鱼,sunfish
+S05,Lepomis cyanellus,Green sunfish,绿太阳鱼,sunfish
+S06,Lepomis megalotis,Longear sunfish,长耳太阳鱼,sunfish
+S07,Pomoxis nigromaculatus,Black crappie,黑莓鲈,crappie
+S08,Pomoxis annularis,White crappie,白莓鲈,crappie
+S09,Ambloplites rupestris,Rock bass,岩鲈,sunfish
+S10,Perca flavescens,Yellow perch,黄金鲈,perch
+S11,Sander vitreus,Walleye,玻璃梭鲈,perch
+S12,Esox lucius,Northern pike,白斑狗鱼,pike
+S13,Esox niger,Chain pickerel,链狗鱼,pike
+S14,Ictalurus punctatus,Channel catfish,斑点叉尾鮰,catfish
+S15,Ameiurus natalis,Yellow bullhead,黄鮰,bullhead
+S16,Ameiurus nebulosus,Brown bullhead,褐鮰,bullhead
+S17,Ameiurus melas,Black bullhead,黑鮰,bullhead
+S18,Morone chrysops,White bass,金眼狼鲈,morone
+S19,Morone americana,White perch,美洲狼鲈,morone
+S20,Cyprinus carpio,Common carp,鲤,carp
+S21,Carassius auratus,Goldfish,金鱼,carp
+S22,Oncorhynchus mykiss,Rainbow trout,虹鳟,trout
+S23,Salmo trutta,Brown trout,褐鳟,trout
+S24,Salvelinus fontinalis,Brook trout,美洲红点鲑,trout
+S25,Lepisosteus osseus,Longnose gar,长吻雀鳝,gar
+S26,Amia calva,Bowfin,弓鳍鱼,bowfin
+S27,Dorosoma cepedianum,Gizzard shad,美洲真鰶,shad
+S28,Catostomus commersonii,White sucker,白亚口鱼,sucker
+S29,Aplodinotus grunniens,Freshwater drum,淡水石首鱼,drum
+S30,Pimephales promelas,Fathead minnow,黑头软口鲦,minnow
+S31,Notemigonus crysoleucas,Golden shiner,金体美鳊,minnow
+S32,Notropis hudsonius,Spottail shiner,斑尾美洲鲅,minnow
+S33,Notropis atherinoides,Emerald shiner,翡翠美洲鲅,minnow
+S34,Semotilus atromaculatus,Creek chub,溪鲅,minnow
+S35,Neogobius melanostomus,Round goby,圆虾虎鱼,goby
+S36,Etheostoma nigrum,Johnny darter,约翰尼镖鲈,darter
+S37,Percina caprodes,Logperch,石镖鲈,darter
+S38,Gambusia affinis,Western mosquitofish,食蚊鱼,livebearer
+S39,Culaea inconstans,Brook stickleback,溪刺鱼,stickleback
+S40,Umbra limi,Central mudminnow,中泥鱼,mudminnow

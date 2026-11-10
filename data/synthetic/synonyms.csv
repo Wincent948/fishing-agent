@@ -1,0 +1,252 @@
+alias,species_id,sci
+Micropterus salmoides,S01,Micropterus salmoides
+micropterus salmoides,S01,Micropterus salmoides
+Largemouth bass,S01,Micropterus salmoides
+largemouth bass,S01,Micropterus salmoides
+大口黑鲈,S01,Micropterus salmoides
+黑鲈,S01,Micropterus salmoides
+加州鲈,S01,Micropterus salmoides
+Micropterus salmoide,S01,Micropterus salmoides
+Micropterus dolomieu,S02,Micropterus dolomieu
+micropterus dolomieu,S02,Micropterus dolomieu
+Smallmouth bass,S02,Micropterus dolomieu
+smallmouth bass,S02,Micropterus dolomieu
+小口黑鲈,S02,Micropterus dolomieu
+Micropterus dolomie,S02,Micropterus dolomieu
+Lepomis macrochirus,S03,Lepomis macrochirus
+lepomis macrochirus,S03,Lepomis macrochirus
+Bluegill,S03,Lepomis macrochirus
+bluegill,S03,Lepomis macrochirus
+蓝鳃太阳鱼,S03,Lepomis macrochirus
+Lepomis macrochiru,S03,Lepomis macrochirus
+Lepomis gibbosus,S04,Lepomis gibbosus
+lepomis gibbosus,S04,Lepomis gibbosus
+Pumpkinseed,S04,Lepomis gibbosus
+pumpkinseed,S04,Lepomis gibbosus
+驼背太阳鱼,S04,Lepomis gibbosus
+Lepomis gibbosu,S04,Lepomis gibbosus
+Lepomis cyanellus,S05,Lepomis cyanellus
+lepomis cyanellus,S05,Lepomis cyanellus
+Green sunfish,S05,Lepomis cyanellus
+green sunfish,S05,Lepomis cyanellus
+绿太阳鱼,S05,Lepomis cyanellus
+Lepomis cyanellu,S05,Lepomis cyanellus
+Lepomis megalotis,S06,Lepomis megalotis
+lepomis megalotis,S06,Lepomis megalotis
+Longear sunfish,S06,Lepomis megalotis
+longear sunfish,S06,Lepomis megalotis
+长耳太阳鱼,S06,Lepomis megalotis
+Lepomis megaloti,S06,Lepomis megalotis
+Pomoxis nigromaculatus,S07,Pomoxis nigromaculatus
+pomoxis nigromaculatus,S07,Pomoxis nigromaculatus
+Black crappie,S07,Pomoxis nigromaculatus
+black crappie,S07,Pomoxis nigromaculatus
+黑莓鲈,S07,Pomoxis nigromaculatus
+Pomoxis nigromaculatu,S07,Pomoxis nigromaculatus
+Pomoxis annularis,S08,Pomoxis annularis
+pomoxis annularis,S08,Pomoxis annularis
+White crappie,S08,Pomoxis annularis
+white crappie,S08,Pomoxis annularis
+白莓鲈,S08,Pomoxis annularis
+Pomoxis annulari,S08,Pomoxis annularis
+Ambloplites rupestris,S09,Ambloplites rupestris
+ambloplites rupestris,S09,Ambloplites rupestris
+Rock bass,S09,Ambloplites rupestris
+rock bass,S09,Ambloplites rupestris
+岩鲈,S09,Ambloplites rupestris
+Ambloplites rupestri,S09,Ambloplites rupestris
+Perca flavescens,S10,Perca flavescens
+perca flavescens,S10,Perca flavescens
+Yellow perch,S10,Perca flavescens
+yellow perch,S10,Perca flavescens
+黄金鲈,S10,Perca flavescens
+黄鲈,S10,Perca flavescens
+Perca flavescen,S10,Perca flavescens
+Sander vitreus,S11,Sander vitreus
+sander vitreus,S11,Sander vitreus
+Walleye,S11,Sander vitreus
+walleye,S11,Sander vitreus
+玻璃梭鲈,S11,Sander vitreus
+梭鲈,S11,Sander vitreus
+Sander vitreu,S11,Sander vitreus
+Esox lucius,S12,Esox lucius
+esox lucius,S12,Esox lucius
+Northern pike,S12,Esox lucius
+northern pike,S12,Esox lucius
+白斑狗鱼,S12,Esox lucius
+狗鱼,S12,Esox lucius
+Esox luciu,S12,Esox lucius
+Esox niger,S13,Esox niger
+esox niger,S13,Esox niger
+Chain pickerel,S13,Esox niger
+chain pickerel,S13,Esox niger
+链狗鱼,S13,Esox niger
+Esox nige,S13,Esox niger
+Ictalurus punctatus,S14,Ictalurus punctatus
+ictalurus punctatus,S14,Ictalurus punctatus
+Channel catfish,S14,Ictalurus punctatus
+channel catfish,S14,Ictalurus punctatus
+斑点叉尾鮰,S14,Ictalurus punctatus
+鮰鱼,S14,Ictalurus punctatus
+Ictalurus punctatu,S14,Ictalurus punctatus
+Ameiurus natalis,S15,Ameiurus natalis
+ameiurus natalis,S15,Ameiurus natalis
+Yellow bullhead,S15,Ameiurus natalis
+yellow bullhead,S15,Ameiurus natalis
+黄鮰,S15,Ameiurus natalis
+Ameiurus natali,S15,Ameiurus natalis
+Ameiurus nebulosus,S16,Ameiurus nebulosus
+ameiurus nebulosus,S16,Ameiurus nebulosus
+Brown bullhead,S16,Ameiurus nebulosus
+brown bullhead,S16,Ameiurus nebulosus
+褐鮰,S16,Ameiurus nebulosus
+Ameiurus nebulosu,S16,Ameiurus nebulosus
+Ameiurus melas,S17,Ameiurus melas
+ameiurus melas,S17,Ameiurus melas
+Black bullhead,S17,Ameiurus melas
+black bullhead,S17,Ameiurus melas
+黑鮰,S17,Ameiurus melas
+Ameiurus mela,S17,Ameiurus melas
+Morone chrysops,S18,Morone chrysops
+morone chrysops,S18,Morone chrysops
+White bass,S18,Morone chrysops
+white bass,S18,Morone chrysops
+金眼狼鲈,S18,Morone chrysops
+Morone chrysop,S18,Morone chrysops
+Morone americana,S19,Morone americana
+morone americana,S19,Morone americana
+White perch,S19,Morone americana
+white perch,S19,Morone americana
+美洲狼鲈,S19,Morone americana
+Morone american,S19,Morone americana
+Cyprinus carpio,S20,Cyprinus carpio
+cyprinus carpio,S20,Cyprinus carpio
+Common carp,S20,Cyprinus carpio
+common carp,S20,Cyprinus carpio
+鲤,S20,Cyprinus carpio
+鲤鱼,S20,Cyprinus carpio
+Cyprinus carpi,S20,Cyprinus carpio
+Carassius auratus,S21,Carassius auratus
+carassius auratus,S21,Carassius auratus
+Goldfish,S21,Carassius auratus
+goldfish,S21,Carassius auratus
+金鱼,S21,Carassius auratus
+Carassius auratu,S21,Carassius auratus
+Oncorhynchus mykiss,S22,Oncorhynchus mykiss
+oncorhynchus mykiss,S22,Oncorhynchus mykiss
+Rainbow trout,S22,Oncorhynchus mykiss
+rainbow trout,S22,Oncorhynchus mykiss
+虹鳟,S22,Oncorhynchus mykiss
+彩虹鳟,S22,Oncorhynchus mykiss
+Oncorhynchus mykis,S22,Oncorhynchus mykiss
+Salmo trutta,S23,Salmo trutta
+salmo trutta,S23,Salmo trutta
+Brown trout,S23,Salmo trutta
+brown trout,S23,Salmo trutta
+褐鳟,S23,Salmo trutta
+Salmo trutt,S23,Salmo trutta
+Salvelinus fontinalis,S24,Salvelinus fontinalis
+salvelinus fontinalis,S24,Salvelinus fontinalis
+Brook trout,S24,Salvelinus fontinalis
+brook trout,S24,Salvelinus fontinalis
+美洲红点鲑,S24,Salvelinus fontinalis
+Salvelinus fontinali,S24,Salvelinus fontinalis
+Lepisosteus osseus,S25,Lepisosteus osseus
+lepisosteus osseus,S25,Lepisosteus osseus
+Longnose gar,S25,Lepisosteus osseus
+longnose gar,S25,Lepisosteus osseus
+长吻雀鳝,S25,Lepisosteus osseus
+Lepisosteus osseu,S25,Lepisosteus osseus
+Amia calva,S26,Amia calva
+amia calva,S26,Amia calva
+Bowfin,S26,Amia calva
+bowfin,S26,Amia calva
+弓鳍鱼,S26,Amia calva
+Amia calv,S26,Amia calva
+Dorosoma cepedianum,S27,Dorosoma cepedianum
+dorosoma cepedianum,S27,Dorosoma cepedianum
+Gizzard shad,S27,Dorosoma cepedianum
+gizzard shad,S27,Dorosoma cepedianum
+美洲真鰶,S27,Dorosoma cepedianum
+Dorosoma cepedianu,S27,Dorosoma cepedianum
+Catostomus commersonii,S28,Catostomus commersonii
+catostomus commersonii,S28,Catostomus commersonii
+White sucker,S28,Catostomus commersonii
+white sucker,S28,Catostomus commersonii
+白亚口鱼,S28,Catostomus commersonii
+Catostomus commersoni,S28,Catostomus commersonii
+Aplodinotus grunniens,S29,Aplodinotus grunniens
+aplodinotus grunniens,S29,Aplodinotus grunniens
+Freshwater drum,S29,Aplodinotus grunniens
+freshwater drum,S29,Aplodinotus grunniens
+淡水石首鱼,S29,Aplodinotus grunniens
+Aplodinotus grunnien,S29,Aplodinotus grunniens
+Pimephales promelas,S30,Pimephales promelas
+pimephales promelas,S30,Pimephales promelas
+Fathead minnow,S30,Pimephales promelas
+fathead minnow,S30,Pimephales promelas
+黑头软口鲦,S30,Pimephales promelas
+Pimephales promela,S30,Pimephales promelas
+Notemigonus crysoleucas,S31,Notemigonus crysoleucas
+notemigonus crysoleucas,S31,Notemigonus crysoleucas
+Golden shiner,S31,Notemigonus crysoleucas
+golden shiner,S31,Notemigonus crysoleucas
+金体美鳊,S31,Notemigonus crysoleucas
+Notemigonus crysoleuca,S31,Notemigonus crysoleucas
+Notropis hudsonius,S32,Notropis hudsonius
+notropis hudsonius,S32,Notropis hudsonius
+Spottail shiner,S32,Notropis hudsonius
+spottail shiner,S32,Notropis hudsonius
+斑尾美洲鲅,S32,Notropis hudsonius
+Notropis hudsoniu,S32,Notropis hudsonius
+Notropis atherinoides,S33,Notropis atherinoides
+notropis atherinoides,S33,Notropis atherinoides
+Emerald shiner,S33,Notropis atherinoides
+emerald shiner,S33,Notropis atherinoides
+翡翠美洲鲅,S33,Notropis atherinoides
+Notropis atherinoide,S33,Notropis atherinoides
+Semotilus atromaculatus,S34,Semotilus atromaculatus
+semotilus atromaculatus,S34,Semotilus atromaculatus
+Creek chub,S34,Semotilus atromaculatus
+creek chub,S34,Semotilus atromaculatus
+溪鲅,S34,Semotilus atromaculatus
+Semotilus atromaculatu,S34,Semotilus atromaculatus
+Neogobius melanostomus,S35,Neogobius melanostomus
+neogobius melanostomus,S35,Neogobius melanostomus
+Round goby,S35,Neogobius melanostomus
+round goby,S35,Neogobius melanostomus
+圆虾虎鱼,S35,Neogobius melanostomus
+Neogobius melanostomu,S35,Neogobius melanostomus
+Etheostoma nigrum,S36,Etheostoma nigrum
+etheostoma nigrum,S36,Etheostoma nigrum
+Johnny darter,S36,Etheostoma nigrum
+johnny darter,S36,Etheostoma nigrum
+约翰尼镖鲈,S36,Etheostoma nigrum
+Etheostoma nigru,S36,Etheostoma nigrum
+Percina caprodes,S37,Percina caprodes
+percina caprodes,S37,Percina caprodes
+Logperch,S37,Percina caprodes
+logperch,S37,Percina caprodes
+石镖鲈,S37,Percina caprodes
+Percina caprode,S37,Percina caprodes
+Gambusia affinis,S38,Gambusia affinis
+gambusia affinis,S38,Gambusia affinis
+Western mosquitofish,S38,Gambusia affinis
+western mosquitofish,S38,Gambusia affinis
+食蚊鱼,S38,Gambusia affinis
+Gambusia affini,S38,Gambusia affinis
+Culaea inconstans,S39,Culaea inconstans
+culaea inconstans,S39,Culaea inconstans
+Brook stickleback,S39,Culaea inconstans
+brook stickleback,S39,Culaea inconstans
+溪刺鱼,S39,Culaea inconstans
+Culaea inconstan,S39,Culaea inconstans
+Umbra limi,S40,Umbra limi
+umbra limi,S40,Umbra limi
+Central mudminnow,S40,Umbra limi
+central mudminnow,S40,Umbra limi
+中泥鱼,S40,Umbra limi
+Umbra lim,S40,Umbra limi
+鲈鱼,S01|S02|S10|S09,AMBIGUOUS
+太阳鱼,S03|S04|S05|S06,AMBIGUOUS
+鳟鱼,S22|S23|S24,AMBIGUOUS

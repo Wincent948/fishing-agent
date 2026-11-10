@@ -1,0 +1,42 @@
+{
+  "u_eval_01": {
+    "profile": {},
+    "catches": []
+  },
+  "u_eval_02": {
+    "profile": {
+      "home_spot": "chicago"
+    },
+    "catches": [
+      {
+        "date": "2026-10-03",
+        "species": "Esox lucius",
+        "count": 1,
+        "length_cm": 72,
+        "location": "chicago"
+      }
+    ]
+  },
+  "u_eval_03": {
+    "profile": {
+      "home_spot": "annapolis"
+    },
+    "catches": []
+  },
+  "u_eval_04": {
+    "profile": {},
+    "catches": [
+      {
+        "date": "2026-10-05",
+        "species": "Ictalurus punctatus",
+        "count": 2,
+        "length_cm": 41,
+        "location": "st_louis"
+      }
+    ]
+  },
+  "u_eval_empty": {
+    "profile": {},
+    "catches": []
+  }
+}

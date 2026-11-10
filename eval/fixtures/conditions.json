@@ -1,0 +1,50 @@
+{
+  "_note": "评测专用固定数据（合成，非真实观测）。评测模式下 get_weather / get_tide 读取本文件，不调用 Open-Meteo。时间均为该地点当地时间；潮高以平均海平面为基准（与 Open-Meteo 一致），可为负。评测冻结时钟：today = 2026-10-10。",
+  "frozen_today": "2026-10-10",
+  "locations": {
+    "port_clinton": {"name": "Lake Erie - Port Clinton", "lat": 41.51, "lon": -82.94, "coastal": false, "sunrise": "07:32", "sunset": "18:59"},
+    "annapolis":    {"name": "Chesapeake Bay - Annapolis", "lat": 38.97, "lon": -76.48, "coastal": true,  "sunrise": "07:12", "sunset": "18:30"},
+    "shorncliffe":  {"name": "Moreton Bay - Shorncliffe", "lat": -27.33, "lon": 153.09, "coastal": true,  "sunrise": "05:18", "sunset": "17:52"},
+    "st_louis":     {"name": "Mississippi River - St. Louis", "lat": 38.63, "lon": -90.19, "coastal": false, "sunrise": "07:06", "sunset": "18:28"},
+    "chicago":      {"name": "Lake Michigan - Chicago", "lat": 41.88, "lon": -87.62, "coastal": false, "sunrise": "06:58", "sunset": "18:23"}
+  },
+  "weather": {
+    "port_clinton": {
+      "2026-10-10": {"condition": "晴", "temp_min_c": 9, "temp_max_c": 18, "wind_kmh": 14, "wind_dir": "SW", "precip_mm": 0, "pressure_trend": "稳定"},
+      "2026-10-11": {"condition": "中雨", "temp_min_c": 10, "temp_max_c": 14, "wind_kmh": 22, "wind_dir": "S", "precip_mm": 18, "pressure_trend": "下降"},
+      "2026-10-12": {"condition": "多云", "temp_min_c": 7, "temp_max_c": 15, "wind_kmh": 16, "wind_dir": "NW", "precip_mm": 1, "pressure_trend": "上升"}
+    },
+    "annapolis": {
+      "2026-10-10": {"condition": "晴", "temp_min_c": 12, "temp_max_c": 22, "wind_kmh": 12, "wind_dir": "E", "precip_mm": 0, "pressure_trend": "稳定"},
+      "2026-10-11": {"condition": "多云", "temp_min_c": 13, "temp_max_c": 21, "wind_kmh": 18, "wind_dir": "SE", "precip_mm": 2, "pressure_trend": "下降"},
+      "2026-10-12": {"condition": "暴风雨", "temp_min_c": 11, "temp_max_c": 16, "wind_kmh": 45, "wind_dir": "NE", "precip_mm": 32, "pressure_trend": "快速下降"}
+    },
+    "shorncliffe": {
+      "2026-10-10": {"condition": "晴", "temp_min_c": 16, "temp_max_c": 27, "wind_kmh": 15, "wind_dir": "SE", "precip_mm": 0, "pressure_trend": "稳定"},
+      "2026-10-11": {"condition": "晴", "temp_min_c": 17, "temp_max_c": 28, "wind_kmh": 20, "wind_dir": "NE", "precip_mm": 0, "pressure_trend": "稳定"},
+      "2026-10-12": {"condition": "阵雨", "temp_min_c": 18, "temp_max_c": 25, "wind_kmh": 26, "wind_dir": "S", "precip_mm": 6, "pressure_trend": "下降"}
+    },
+    "st_louis": {
+      "2026-10-10": {"condition": "多云", "temp_min_c": 11, "temp_max_c": 21, "wind_kmh": 10, "wind_dir": "S", "precip_mm": 0, "pressure_trend": "稳定"},
+      "2026-10-11": {"condition": "晴", "temp_min_c": 10, "temp_max_c": 23, "wind_kmh": 8, "wind_dir": "SW", "precip_mm": 0, "pressure_trend": "稳定"},
+      "2026-10-12": {"condition": "小雨", "temp_min_c": 12, "temp_max_c": 18, "wind_kmh": 19, "wind_dir": "W", "precip_mm": 5, "pressure_trend": "下降"}
+    },
+    "chicago": {
+      "2026-10-10": {"condition": "多云", "temp_min_c": 8, "temp_max_c": 16, "wind_kmh": 21, "wind_dir": "N", "precip_mm": 0, "pressure_trend": "稳定"},
+      "2026-10-11": {"condition": "晴", "temp_min_c": 6, "temp_max_c": 15, "wind_kmh": 17, "wind_dir": "NW", "precip_mm": 0, "pressure_trend": "上升"},
+      "2026-10-12": {"condition": "大风", "temp_min_c": 5, "temp_max_c": 12, "wind_kmh": 32, "wind_dir": "N", "precip_mm": 2, "pressure_trend": "上升"}
+    }
+  },
+  "tide": {
+    "annapolis": {
+      "2026-10-10": {"status": "ok", "extremes": [{"type": "high", "time": "06:12", "height_m": 0.6}, {"type": "low", "time": "12:31", "height_m": -0.3}, {"type": "high", "time": "18:40", "height_m": 0.7}]},
+      "2026-10-11": {"status": "ok", "extremes": [{"type": "high", "time": "06:58", "height_m": 0.6}, {"type": "low", "time": "13:15", "height_m": -0.3}, {"type": "high", "time": "19:22", "height_m": 0.7}]},
+      "2026-10-12": {"status": "error", "error": "upstream_timeout"}
+    },
+    "shorncliffe": {
+      "2026-10-10": {"status": "ok", "extremes": [{"type": "high", "time": "04:05", "height_m": 0.9}, {"type": "low", "time": "10:20", "height_m": -0.8}, {"type": "high", "time": "16:35", "height_m": 0.8}, {"type": "low", "time": "22:40", "height_m": -0.7}]},
+      "2026-10-11": {"status": "ok", "extremes": [{"type": "high", "time": "04:50", "height_m": 0.9}, {"type": "low", "time": "11:05", "height_m": -0.8}, {"type": "high", "time": "17:20", "height_m": 0.8}, {"type": "low", "time": "23:28", "height_m": -0.7}]},
+      "2026-10-12": {"status": "ok", "extremes": [{"type": "high", "time": "05:36", "height_m": 0.8}, {"type": "low", "time": "11:52", "height_m": -0.7}, {"type": "high", "time": "18:06", "height_m": 0.8}]}
+    }
+  }
+}

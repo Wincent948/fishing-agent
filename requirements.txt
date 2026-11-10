@@ -1,0 +1,14 @@
+langgraph>=1.0
+langchain-core>=1.0
+langchain-openai>=1.0
+chromadb>=1.0
+fastapi>=0.110
+uvicorn>=0.29
+python-multipart
+pydantic>=2
+numpy
+pandas
+pyarrow
+pyyaml
+httpx
+pytest
