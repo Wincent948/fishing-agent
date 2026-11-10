@@ -58,7 +58,9 @@ def run(text: str, slots: dict, flags: dict, today: str) -> dict:
                  if hits else "你想了解它的哪方面？")
     llm = get_llm("agent")
     if llm:                                                           # 在线：ReAct（模型自己决定检索）
-        return _react(llm, text, species)
+        out = _react(llm, text, species, topic)
+        if out:
+            return out                                                # 失败时返回 None → 降级到下面的离线实现
     parts, cites = [], []
     for sci in species[:2]:
         hits = _search(text, sci, topic) or _search(text, sci)
@@ -70,22 +72,57 @@ def run(text: str, slots: dict, flags: dict, today: str) -> dict:
     return R("answer", "\n".join(parts), citations=cites)
 
 
-def _react(llm, text, species):                                       # pragma: no cover - 需要 API key
+def _react(llm, text, species, topic=None, max_rounds: int = 3):
+    """ReAct 循环：模型决定是否检索、查什么；最多 max_rounds 轮工具调用。
+    防自旋：工具被预算拦截或轮数用完 → 强制「不带工具」再问一次，让模型基于已有资料作答。
+    先检索再推理（retrieve-first）：进入循环前先按鱼种 + 主题检索一次，把资料放进上下文，
+    保证回答有依据（不让模型凭参数记忆作答），模型觉得不够再自己追加检索。
+    任何异常（网络、格式、超时）→ 记录到 trace 并返回 None，由调用方降级为离线实现。"""
     from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
-    tools = {"search_species_kb": search_species_kb, "query_species_graph": query_species_graph}
     from app.tools.registry import lc_tools
-    bound = llm.bind_tools(lc_tools(list(tools)))
-    msgs = [SystemMessage(load("knowledge")["system"]), HumanMessage(f"{text}\n（已识别鱼种：{species}）")]
-    for _ in range(4):                                                # 子 Agent 步数上限
-        ai = bound.invoke(msgs)
+    tools = {"search_species_kb": search_species_kb, "query_species_graph": query_species_graph}
+    trace = ctx().trace
+    try:
+        bound = llm.bind_tools(lc_tools(list(tools)))
+        seed = []
+        for sci in species[:2]:
+            seed += (_search(text, sci, topic) or _search(text, sci))[:3]
+        cites = [h["id"] for h in seed]
+        ctx_block = "\n".join(f"[{h['id']}] {h['text']}" for h in seed) or "（未检索到资料）"
+        msgs = [SystemMessage(load("knowledge")["system"]),
+                HumanMessage(f"{text}\n（已识别鱼种：{species}）\n已检索到的资料：\n<retrieved>\n{ctx_block}\n</retrieved>\n"
+                             "资料足够就直接回答并标注 [资料id]；不够再调用工具。")]
+        for rnd in range(max_rounds):
+            ai = bound.invoke(msgs)
+            record_usage(ai)
+            msgs.append(ai)
+            if not ai.tool_calls:
+                if (ai.content or "").strip():
+                    trace.append({"node": "knowledge_react", "rounds": rnd, "stop": "answered"})
+                    return R("answer", ai.content, citations=cites)
+                break                                                 # 空回答 → 走强制作答
+            blocked = False
+            for tc in ai.tool_calls:
+                fn = tools.get(tc["name"])
+                if fn is None:                                        # 模型编造了不存在的工具
+                    msgs.append(ToolMessage(content="不存在该工具", tool_call_id=tc["id"]))
+                    continue
+                res = fn(**tc["args"])
+                blocked |= res.source == "budget"
+                data = res.data
+                if tc["name"] == "search_species_kb" and res.ok:
+                    data, _ = filter_hits(res.data)
+                    cites += [h["id"] for h in data]
+                msgs.append(ToolMessage(content=f"<retrieved>{data or res.error}</retrieved>", tool_call_id=tc["id"]))
+            if blocked:
+                break
+        # 强制收尾：不再给工具，只能基于已检索内容回答
+        msgs.append(HumanMessage("请只根据上面 <retrieved> 里的资料直接回答用户问题，不要再调用工具；资料里没有的就说查不到。"))
+        ai = llm.invoke(msgs)
         record_usage(ai)
-        msgs.append(ai)
-        if not ai.tool_calls:
-            return R("answer", ai.content)
-        for tc in ai.tool_calls:
-            res = tools[tc["name"]](**tc["args"])
-            data = res.data
-            if tc["name"] == "search_species_kb" and res.ok:
-                data, _ = filter_hits(res.data)
-            msgs.append(ToolMessage(content=f"<retrieved>{data or res.error}</retrieved>", tool_call_id=tc["id"]))
-    return R("partial_answer", "检索次数已达上限，以下是目前能确定的信息：" + str(msgs[-1].content)[:500])
+        trace.append({"node": "knowledge_react", "rounds": max_rounds, "stop": "forced_answer"})
+        if (ai.content or "").strip():
+            return R("answer", ai.content, citations=cites)
+    except Exception as e:                                            # noqa: BLE001
+        trace.append({"node": "knowledge_react", "error": f"{type(e).__name__}: {e}"[:200]})
+    return None

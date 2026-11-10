@@ -1,0 +1,46 @@
+{
+  "mode": "online（LLM）",
+  "sets": "golden,multiturn,adversarial",
+  "split": "all",
+  "items": 15,
+  "passed": 15,
+  "pass_rate": 1.0,
+  "by_category": {
+    "adversarial": {
+      "passed": 5,
+      "total": 5,
+      "rate": 1.0
+    },
+    "identify": {
+      "passed": 5,
+      "total": 5,
+      "rate": 1.0
+    },
+    "multiturn": {
+      "passed": 5,
+      "total": 5,
+      "rate": 1.0
+    }
+  },
+  "failed_checks": {},
+  "multiturn_turn_pass_rate": 1,
+  "latency_ms": {
+    "p50": 3,
+    "p95": 57
+  },
+  "avg_tool_calls": 0.8,
+  "tokens": {
+    "in": 0,
+    "out": 0,
+    "llm_calls": 0
+  },
+  "guard_hits": {
+    "retrieval": 1,
+    "input": 5
+  },
+  "route_sources": {
+    "rules": 15,
+    "guard": 5
+  },
+  "errors": 0
+}
