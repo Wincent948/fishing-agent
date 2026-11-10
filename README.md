@@ -1,6 +1,5 @@
 ---
 title: Fishing Agent
-emoji: 🎣
 colorFrom: blue
 colorTo: green
 sdk: gradio
