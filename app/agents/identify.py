@@ -26,6 +26,8 @@ def run(text: str, slots: dict, flags: dict, today: str, want_rules: bool) -> di
         ctx().guard_hits.append({"guard": "input", "reason": "image_text_injection"})
     res = identify_fish(image=slots["image"])
     if not res.ok:
+        if res.source in ("exception", "timeout", "breaker"):         # 内部错误不直接展示给用户，原因在 trace 里
+            return R("answer", "识鱼服务暂时出错了，请稍后再试，或换一张更清晰的照片。")
         return R("answer", res.error)
     v, cands = res.data["verdict"], res.data["candidates"]
     if v == "not_fish":

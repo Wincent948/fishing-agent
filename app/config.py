@@ -33,6 +33,9 @@ LLM_API_KEY = os.getenv("LLM_API_KEY", "")
 MODEL_SMALL = os.getenv("MODEL_SMALL", "chat-small")   # 网关别名 → Qwen3.5-9B
 MODEL_LARGE = os.getenv("MODEL_LARGE", "chat-large")   # 网关别名 → Qwen3.6-35B-A3B
 # 没配 key 就进入离线模式：所有 LLM 节点降级为规则 / 模板实现，整条链路仍可运行
+VISION = os.getenv("VISION", "mock")                    # mock = 读图片登记表；qwen = 用 VLM 看真实照片
+MODEL_VISION = os.getenv("MODEL_VISION", MODEL_SMALL)   # 默认复用 Qwen3.5-9B（原生支持看图）
+ID_SAMPLES = int(os.getenv("ID_SAMPLES", "1"))          # 自洽性采样次数；>1 更稳但成本成倍增加
 DISABLE_THINKING = os.getenv("DISABLE_THINKING", "1") == "1"   # Qwen3.x 默认先「思考」再回答；路由等短输出节点关掉更快更省
 OFFLINE = os.getenv("OFFLINE", "auto") == "1" or (os.getenv("OFFLINE", "auto") == "auto" and not LLM_API_KEY)
 

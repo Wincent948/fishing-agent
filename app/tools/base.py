@@ -105,6 +105,7 @@ def tool_wrapper(name: str, *, idempotent: bool = True, retries: int = 2, timeou
             t0 = time.time()
             attempts = (retries + 1) if idempotent else 1               # 写入类工具不自动重试
             res = ToolResult(False, error=f"【{name}】调用失败")
+            exc_detail = ""
             for _ in range(attempts):
                 try:
                     fut = _POOL.submit(contextvars.copy_context().run, fn, **kwargs)
@@ -116,9 +117,11 @@ def tool_wrapper(name: str, *, idempotent: bool = True, retries: int = 2, timeou
                                      source="timeout")
                 except Exception as e:  # noqa: BLE001 - 不把堆栈暴露给 LLM
                     res = ToolResult(False, error=f"【{name}】内部错误：{type(e).__name__}", source="exception")
+                    exc_detail = f"{type(e).__name__}: {e}"[:300]      # 详细原因只进 trace，不进回答
             res.latency_ms = int((time.time() - t0) * 1000)
             _breaker_record(name, res.ok or res.source in ("validation", "not_found", "not_applicable"))
-            record.update(ok=res.ok, latency_ms=res.latency_ms, source=res.source, error=res.error)
+            record.update(ok=res.ok, latency_ms=res.latency_ms, source=res.source, error=res.error,
+                          **({"exception": exc_detail} if exc_detail else {}))
             c.tool_calls.append(record)
             c.cache[key] = res
             return res

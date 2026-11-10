@@ -52,25 +52,31 @@ def image_meta(path: str | None) -> dict | None:
     return _registry().get(Path(path).name) if path else None
 
 
-@tool_wrapper("identify_fish")
+@tool_wrapper("identify_fish", retries=1, timeout_s=90)   # VLM 看图要几秒到十几秒
 def identify_fish(image: str, top_k: int = 3) -> ToolResult:
     """识别图片中的鱼种，返回 top-k 候选与置信度，以及判定：confident / uncertain / not_in_library / not_fish。
-    离线为 mock（读图片登记表）；设置 VISION=bioclip 时使用 BioCLIP 2 + 近邻投票。"""
+    评测登记表里的图片：mock（可复现）；其他真实照片且 VISION=qwen：用 VLM 识别（app/tools/vision.py）。"""
     meta = image_meta(image)
-    if os.getenv("VISION") == "bioclip":  # pragma: no cover - 需模型权重
-        raise NotImplementedError("接入 BioCLIP 2：提特征 → 线性探针 + ChromaDB 近邻投票")
-    if not meta:
-        return ToolResult(False, error="【识鱼】无法读取这张图片。", source="validation")
-    top = [{"sci": s, "p": p} for s, p in json.loads(meta["mock_top"])][:top_k]
-    if meta["profile"] == "non_fish" or not top:
+    if meta:
+        top = [{"sci": s, "p": p} for s, p in json.loads(meta["mock_top"])][:top_k]
+        is_fish, source, extra = meta["profile"] != "non_fish", "mock_vision", {}
+    elif config.VISION == "qwen" and not config.OFFLINE and image and Path(image).expanduser().is_file():
+        from app.tools.vision import vlm_identify
+        out = vlm_identify(str(Path(image).expanduser()), top_k)
+        top, is_fish, source = out["candidates"], out["is_fish"], "vlm"
+        extra = {"features": out["features"], "samples": out["samples"]}
+    else:
+        hint = "（真实照片识别需要在 .env 里设置 VISION=qwen 并配置 LLM key）" if image and Path(image).expanduser().is_file() else ""
+        return ToolResult(False, error=f"【识鱼】无法读取这张图片。{hint}", source="validation")
+    if not is_fish:
         verdict = "not_fish"
-    elif top[0]["p"] < config.ID_REJECT_THRESHOLD:
+    elif not top or top[0]["p"] < config.ID_REJECT_THRESHOLD:
         verdict = "not_in_library"
     elif top[0]["p"] < config.ID_CONF_THRESHOLD:
         verdict = "uncertain"
     else:
         verdict = "confident"
-    return ToolResult(True, {"candidates": top, "verdict": verdict}, source="mock_vision")
+    return ToolResult(True, {"candidates": top, "verdict": verdict, **extra}, source=source)
 
 
 @tool_wrapper("search_images")
