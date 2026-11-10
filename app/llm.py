@@ -20,8 +20,9 @@ def get_llm(role: str):
     from langchain_openai import ChatOpenAI
     p = dict(PARAMS[role])
     top_p = p.pop("top_p", None)
-    return ChatOpenAI(base_url=config.LLM_BASE_URL, api_key=config.LLM_API_KEY, timeout=30, max_retries=2, seed=7,
-                      **({"top_p": top_p} if top_p else {}), **p)
+    extra = {"extra_body": {"enable_thinking": False}} if config.DISABLE_THINKING else {}
+    return ChatOpenAI(base_url=config.LLM_BASE_URL, api_key=config.LLM_API_KEY, timeout=60, max_retries=2, seed=7,
+                      **({"top_p": top_p} if top_p else {}), **extra, **p)
 
 
 def record_usage(msg) -> None:

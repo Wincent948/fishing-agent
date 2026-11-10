@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 .env
 eval/assets/boundary/
+.Rhistory
+.DS_Store

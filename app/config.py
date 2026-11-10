@@ -12,12 +12,28 @@ FIXTURES = EVAL / "fixtures" / "conditions.json"
 RUNTIME = ROOT / ".runtime"                  # 索引、SQLite、日志等运行时产物
 RUNTIME.mkdir(exist_ok=True)
 
+
+def _load_dotenv(path: Path = ROOT / ".env") -> None:
+    """读取项目根目录的 .env（KEY=VALUE，# 为注释）。已存在的环境变量优先，不覆盖。"""
+    if not path.exists():
+        return
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.split(" #")[0].strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        k, v = line.split("=", 1)
+        os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+
+
+_load_dotenv()
+
 # ---- 模型（OpenAI 兼容接口，经 LiteLLM 网关或托管推理）
 LLM_BASE_URL = os.getenv("LLM_BASE_URL", "")
 LLM_API_KEY = os.getenv("LLM_API_KEY", "")
 MODEL_SMALL = os.getenv("MODEL_SMALL", "chat-small")   # 网关别名 → Qwen3.5-9B
 MODEL_LARGE = os.getenv("MODEL_LARGE", "chat-large")   # 网关别名 → Qwen3.6-35B-A3B
 # 没配 key 就进入离线模式：所有 LLM 节点降级为规则 / 模板实现，整条链路仍可运行
+DISABLE_THINKING = os.getenv("DISABLE_THINKING", "1") == "1"   # Qwen3.x 默认先「思考」再回答；路由等短输出节点关掉更快更省
 OFFLINE = os.getenv("OFFLINE", "auto") == "1" or (os.getenv("OFFLINE", "auto") == "auto" and not LLM_API_KEY)
 
 # ---- 评测模式：工具读 fixtures、时钟冻结
