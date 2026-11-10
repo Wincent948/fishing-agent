@@ -1,0 +1,16 @@
+{
+  "$schema": "https://modelscope.cn/api/v1/studios/deploy_schema.json",
+  "sdk_type": "gradio",
+  "sdk_version": "6.2.0",
+  "resource_configuration": "platform/2v-cpu-16g-mem",
+  "base_image": "ubuntu22.04-py311-torch2.3.1-modelscope1.31.0",
+  "environment_variables": [
+    {"name": "LLM_BASE_URL", "value": "https://api.siliconflow.cn/v1"},
+    {"name": "MODEL_SMALL", "value": "Qwen/Qwen3.5-9B"},
+    {"name": "MODEL_LARGE", "value": "Qwen/Qwen3.6-35B-A3B"},
+    {"name": "VISION", "value": "qwen"},
+    {"name": "DISABLE_THINKING", "value": "1"},
+    {"name": "SESSION_LIMIT", "value": "30"},
+    {"name": "DAILY_LIMIT", "value": "300"}
+  ]
+}

@@ -12,3 +12,4 @@ pyarrow
 pyyaml
 httpx
 pytest
+gradio>=6

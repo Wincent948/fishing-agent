@@ -1,3 +1,16 @@
+---
+title: Fishing Agent
+emoji: 🎣
+colorFrom: blue
+colorTo: green
+sdk: gradio
+sdk_version: 6.31.0
+python_version: "3.12"
+app_file: app.py
+pinned: false
+short_description: LangGraph 多模态钓鱼助手 Agent
+---
+
 # 多模态钓鱼助手 Agent
 
 基于 **LangGraph + LangChain** 的多模态钓鱼助手：拍照识鱼、鱼类知识问答、示例捕捞规则、天气潮汐与最佳出钓时段、出钓规划、渔获记录。
@@ -112,6 +125,15 @@ update_memory 无新的长期事实
 
 检索消融（20 道知识题，不加鱼种过滤）：纯向量 Recall@5 65%、纯 BM25 90%、混合 90%、混合 + 重排 80%。
 离线哈希向量没有语义能力，简易重排器也不如交叉编码器，所以「加重排反而下降」。这正是要做消融的原因：**换成 Qwen3-Embedding / Qwen3-Reranker 后必须重跑再下结论。**
+
+## 网页演示
+
+```bash
+python app.py          # 浏览器打开 http://127.0.0.1:7860
+```
+
+最简单的 Gradio 界面：聊天、上传照片、记录渔获时的「确认 / 取消」按钮（LangGraph interrupt），右侧调试面板显示路由、工具调用、护栏命中和 token。
+公开部署时用环境变量配置 key，并有每会话 30 轮、全站每天 300 轮的上限，防止 key 被刷。
 
 ## 用真实照片识鱼
 
