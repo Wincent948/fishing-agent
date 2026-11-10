@@ -1,0 +1,70 @@
+{
+  "mode": "online（LLM）",
+  "sets": "golden,multiturn,adversarial",
+  "split": "all",
+  "items": 330,
+  "passed": 329,
+  "pass_rate": 0.997,
+  "by_category": {
+    "adversarial": {
+      "passed": 80,
+      "total": 80,
+      "rate": 1.0
+    },
+    "boundary": {
+      "passed": 50,
+      "total": 50,
+      "rate": 1.0
+    },
+    "identify": {
+      "passed": 49,
+      "total": 50,
+      "rate": 0.98
+    },
+    "knowledge": {
+      "passed": 50,
+      "total": 50,
+      "rate": 1.0
+    },
+    "multihop": {
+      "passed": 50,
+      "total": 50,
+      "rate": 1.0
+    },
+    "multiturn": {
+      "passed": 50,
+      "total": 50,
+      "rate": 1.0
+    }
+  },
+  "failed_checks": {
+    "tools": 1,
+    "keywords": 1
+  },
+  "multiturn_turn_pass_rate": 1,
+  "latency_ms": {
+    "p50": 2,
+    "p95": 2350
+  },
+  "avg_tool_calls": 1.06,
+  "tokens": {
+    "in": 27630,
+    "out": 2253,
+    "llm_calls": 42
+  },
+  "guard_hits": {
+    "retrieval": 13,
+    "input": 49,
+    "output": 13,
+    "action": 20
+  },
+  "route_sources": {
+    "rules": 307,
+    "guard": 49,
+    "too_short": 3,
+    "semantic": 1,
+    "inherit": 15,
+    "pending": 15
+  },
+  "errors": 0
+}
