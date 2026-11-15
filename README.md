@@ -81,6 +81,8 @@ curl -N -X POST localhost:8000/chat -H "Authorization: Bearer $TOKEN" -H 'Conten
 # event: start → event: node (input_guard / router / planner / …) → event: delta … → event: done
 ```
 
+也可以在 http://localhost:8000/docs 里调试：先执行 `POST /v1/dev-token` 拿到 token，点右上角 **Authorize** 粘贴（不用加 `Bearer` 前缀），之后所有需要鉴权的接口都能直接 Try it out。
+
 需要确认的写操作（如记录渔获）会在 `done` 里返回 `behavior: confirm_required`，再发 `{"thread_id": "t1", "confirm": true}` 即可恢复。`GET /health` 返回索引是否就绪、离线 / fixture 模式，供容器 healthcheck 使用。
 
 ### 2. Docker 部署（`Dockerfile`、`docker-compose.yml`）

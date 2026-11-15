@@ -20,8 +20,9 @@ import time
 from collections import defaultdict
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import StreamingResponse
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
 
 from app import config
@@ -44,7 +45,12 @@ def sign(user_id: str) -> str:
     return f"{base64.urlsafe_b64encode(user_id.encode()).decode()}.{sig}"
 
 
-def current_user(authorization: str = Header(default="")) -> str:
+# HTTPBearer 让 /docs 出现 Authorize 按钮；auto_error=False 时自己读原始请求头，兼容不带 "Bearer " 前缀的旧调用
+_bearer = HTTPBearer(auto_error=False, description="先调用 POST /v1/dev-token 获取 token，粘贴到这里（不用加 Bearer 前缀）")
+
+
+def current_user(request: Request, _creds: HTTPAuthorizationCredentials | None = Depends(_bearer)) -> str:
+    authorization = request.headers.get("authorization", "")
     try:
         raw, sig = authorization.removeprefix("Bearer ").split(".")
         uid = base64.urlsafe_b64decode(raw.encode()).decode()
