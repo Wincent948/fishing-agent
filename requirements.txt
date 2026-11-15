@@ -11,5 +11,6 @@ pandas
 pyarrow
 pyyaml
 httpx
+mcp[cli]>=1.9,<2          # FastMCP（2.x 已改名为 MCPServer）
 pytest
 gradio>=6

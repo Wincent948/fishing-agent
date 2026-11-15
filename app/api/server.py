@@ -7,6 +7,8 @@
   POST /v1/confirm        回答写入确认       {"thread_id": "...", "confirm": true}
   GET/DELETE /v1/memory   查看 / 删除自己的长期记忆
   GET  /healthz
+  POST /chat              SSE 流式对话          {"thread_id": "...", "text": "..."} 或 {"thread_id": "...", "confirm": true}
+  GET  /health            健康检查（容器 healthcheck 用）
 """
 from __future__ import annotations
 
@@ -19,9 +21,11 @@ from collections import defaultdict
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from app import config
+from app.api.sse import sse, stream_turn
 from app.memory import store
 from app.service import run_turn
 
@@ -124,3 +128,29 @@ def delete_memory(uid: str = Depends(current_user)):
 def healthz():
     kb_ok = (config.RUNTIME / "kb" / "manifest.json").exists()
     return {"ok": True, "kb_index": kb_ok, "offline_mode": config.OFFLINE, "fixture_mode": config.FIXTURE_MODE}
+
+
+# ---------------- SSE 流式对话：与 /v1/chat 同一套鉴权、限流和字段裁剪，只是改成边跑边推
+class ChatStreamIn(BaseModel):
+    thread_id: str = Field(min_length=1, max_length=64)
+    text: str = Field(default="", max_length=config.MAX_INPUT_CHARS * 2)
+    confirm: bool | None = None        # 上一轮返回 confirm_required 时，用它恢复（等同 /v1/confirm）
+
+
+@app.post("/chat")
+def chat_stream(body: ChatStreamIn, uid: str = Depends(current_user)):
+    if body.confirm is None and not body.text.strip():
+        raise HTTPException(422, "text 和 confirm 至少提供一个")
+    resume = {"confirm": body.confirm} if body.confirm is not None else None
+
+    def events():
+        for event, data in stream_turn(uid, f"{uid}:{body.thread_id}", text=body.text, resume=resume):
+            yield sse(event, _public(data) if event == "done" else data)
+
+    return StreamingResponse(events(), media_type="text/event-stream",
+                             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+
+@app.get("/health")
+def health():
+    return healthz()

@@ -20,7 +20,19 @@ short_description: LangGraph 多模态钓鱼助手 Agent
 
 ---
 
-## 快速开始
+## Quick Start
+
+**方式一：Docker（推荐，一键起）**
+
+```bash
+cp .env.example .env      # 可选：填 LLM_API_KEY 进入在线模式；不建 .env 则以离线模式启动
+docker compose up -d --build
+curl localhost:8000/health
+```
+
+首次启动会在数据卷里建知识库索引（约十几秒），之后重启直接复用。`.env` 不入库也不进镜像，只在运行时由 compose 注入。
+
+**方式二：本地**
 
 ```bash
 pip install -r requirements.txt
@@ -29,12 +41,70 @@ make index     # 建索引：卡片 + 长文切块 → ChromaDB + BM25
 make test      # 单元测试
 make eval      # 跑全部 330 道评测题，报告在 eval/results/<run_id>/report.md
 make api       # 启动 FastAPI（http://127.0.0.1:8000/docs）
+make mcp-dev   # 用 MCP Inspector 调试 MCP server（需要 uv 和 Node）
 ```
 
 默认是**离线模式**：没有配 API key 时，所有 LLM 节点降级为规则 / 模板实现，整条链路照样能跑。
 配置 `LLM_BASE_URL`、`LLM_API_KEY` 后自动切到在线模式（Qwen3.5-9B / Qwen3.6-35B-A3B，经 LiteLLM 网关），见 `.env.example`。
 
 ---
+
+## 架构说明
+
+```
+          ┌──────────── 接入层（只做协议适配，不含业务逻辑）────────────┐
+          │ FastAPI  /v1/*（JSON）  /chat（SSE）  /health               │
+          │ Gradio   app.py                                             │
+          │ MCP      mcp_server.py（get_tide、search_fishing_kb）        │
+          └───────────────┬──────────────────────────┬──────────────────┘
+                          │ run_turn / stream_turn    │ 直接调用工具
+                          ▼                           ▼
+   LangGraph 主图（护栏 → 记忆 → 路由 → Workflow / 子 Agent → 输出护栏）
+                          │
+                          ▼
+   工具层 app/tools（统一外壳：校验、超时、重试、熔断、预算、埋点）
+        │                     │                         │
+   规则表 rules.csv    潮汐 / 天气（fixture 或 Open-Meteo）    混合检索：ChromaDB 向量 + BM25 + RRF + 重排
+                                                       （索引与 SQLite 记忆都在 .runtime/，容器里挂数据卷）
+```
+
+三种接入方式共用同一套图和工具：SSE 接口复用主图，只是把 `invoke` 换成 `stream`；MCP server 直接调用 `app/tools` 里带外壳的工具函数，参数校验和报错文案与 Agent 内部完全一致。
+
+### 1. SSE 流式接口（`POST /chat`）
+
+`app/api/sse.py` 用 `GRAPH.stream(stream_mode="updates")` 运行主图，每跑完一个节点推一条 `node` 事件；回答**在输出护栏审查之后**才分片推送（`delta`），不会把未审查的模型原文先流给用户；最后一条 `done` 的字段与 `/v1/chat` 相同（调试信息同样只在 `APP_ENV=dev` 返回）。鉴权、限流与 `/v1/*` 共用。
+
+```bash
+TOKEN=$(curl -s -X POST "localhost:8000/v1/dev-token?user_id=u_demo" | python -c 'import sys,json;print(json.load(sys.stdin)["token"])')
+curl -N -X POST localhost:8000/chat -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+     -d '{"thread_id": "t1", "text": "明天去 Annapolis 钓褐鳟，几点去比较好？"}'
+# event: start → event: node (input_guard / router / planner / …) → event: delta … → event: done
+```
+
+需要确认的写操作（如记录渔获）会在 `done` 里返回 `behavior: confirm_required`，再发 `{"thread_id": "t1", "confirm": true}` 即可恢复。`GET /health` 返回索引是否就绪、离线 / fixture 模式，供容器 healthcheck 使用。
+
+### 2. Docker 部署（`Dockerfile`、`docker-compose.yml`）
+
+镜像基于 `python:3.12-slim`，以非 root 用户运行；`docker/entrypoint.sh` 发现没有索引时先建库再起 uvicorn。`.runtime/`（Chroma 索引、BM25 语料、SQLite 长期记忆、上传图片）挂在命名卷 `fishing-runtime` 上，`docker compose down` 后数据仍在，`docker compose down -v` 才会清空。`.env` 被 `.gitignore` 和 `.dockerignore` 同时排除，compose 以 `env_file`（`required: false`）在运行时注入。healthcheck 每 30 秒请求一次 `/health`。
+
+### 3. MCP server（`mcp_server.py`）
+
+用 `mcp` 的 FastMCP 暴露两个工具和一个资源，可接入 Claude Desktop、Cursor 等 MCP 客户端：
+
+| 名称 | 类型 | 说明 |
+| --- | --- | --- |
+| `get_tide(location, date?)` | tool | 沿海钓点的高 / 低潮时间与潮高；支持别名（Annapolis、Moreton Bay…），内陆水域返回错误 |
+| `search_fishing_kb(query, scientific_name?, doc_type?)` | tool | 鱼类知识库混合检索，返回带 id 的资料片段 |
+| `fishing://locations` | resource | 支持的钓点、坐标、是否沿海、可查日期 |
+
+每次调用使用独立的运行上下文（调用预算、去重缓存互不影响）；工具失败时以 MCP 错误（`isError`）返回原有的中文提示。
+
+```bash
+mcp dev mcp_server.py      # 打开 MCP Inspector 调试（依赖 uv 和 Node）
+python mcp_server.py       # stdio 模式，供客户端配置使用
+```
+
+注意：`mcp` 2.x 把 FastMCP 改名为 `MCPServer`，`requirements.txt` 因此固定 `mcp[cli]<2`。
 
 ## 学习路线：按这个顺序读代码
 
@@ -50,7 +120,8 @@ make api       # 启动 FastAPI（http://127.0.0.1:8000/docs）
 | 8 | `app/guards/` | 四道护栏：输入、资料、动作、输出 |
 | 9 | `app/memory/`、`app/context/` | 长期记忆（SQLite，按 user_id 隔离）、上下文组装与 token 预算 |
 | 10 | `app/prompts/*.yaml` | 带版本号的提示词，每个节点一份 |
-| 11 | `app/api/server.py` | 业务网关：鉴权、限流、确认接口、调试信息只在 dev 返回 |
+| 11 | `app/api/server.py`、`app/api/sse.py` | 业务网关：鉴权、限流、确认接口、SSE 流式、调试信息只在 dev 返回 |
+| 11b | `mcp_server.py` | MCP server：潮汐与知识检索两个工具的协议适配 |
 | 12 | `eval/` | 评测中台：数据集、打分器、运行器、报告、检索消融 |
 
 ## 一个请求的完整旅程
@@ -156,5 +227,5 @@ python scripts/identify_photo.py ~/Desktop/fish.jpg "这是什么鱼？能留吗
 
 - 真实数据：Fish-Vista 图片 + FishBase（`eval/freeze_gold.py` 已支持）
 - 真实模型：`EMBEDDER=qwen`、`VISION=bioclip`、`GUARD_MODELS=1`、配置 LLM key
-- 工程：Langfuse trace、Docker Compose（Redis checkpointer、LiteLLM）、CI 门禁
+- 工程：Langfuse trace、Compose 里加 Redis checkpointer 与 LiteLLM、CI 门禁
 - 前端：Gradio 界面 + 调试面板（展示路由、工具调用、token），部署到 Hugging Face Spaces
