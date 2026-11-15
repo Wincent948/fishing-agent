@@ -12,6 +12,8 @@ short_description: LangGraph 多模态钓鱼助手 Agent
 
 # 多模态钓鱼助手 Agent
 
+[![CI](https://github.com/Wincent948/fishing-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Wincent948/fishing-agent/actions/workflows/ci.yml)
+
 基于 **LangGraph + LangChain** 的多模态钓鱼助手：拍照识鱼、鱼类知识问答、示例捕捞规则、天气潮汐与最佳出钓时段、出钓规划、渔获记录。
 架构上 **Workflow 做骨架，Agent 处理开放部分**，配有四道护栏、多层防自旋、四层记忆、两层网关和一套自建评测中台。
 
@@ -117,6 +119,22 @@ python mcp_server.py       # stdio 模式，供客户端配置使用
 ```
 
 注意：`mcp` 2.x 把 FastMCP 改名为 `MCPServer`，`requirements.txt` 因此固定 `mcp[cli]<2`。
+
+### 4. CI/CD（`.github/workflows/ci.yml`）
+
+GitHub Actions 在每个 PR 和每次推送到 `main` 时自动运行：
+
+| Job | 做什么 |
+| --- | --- |
+| `Unit tests` | Python 3.12 装依赖，离线模式（`OFFLINE=1`）跑 `pytest`，不需要任何 API key |
+| `Docker build & smoke test` | 构建镜像（GitHub Actions 缓存加速），`docker compose up --wait` 起 api + redis，检查 `/health`（索引就绪、`checkpointer=redis`），再走一遍 SSE `/chat` |
+| 发布（仅 `main`） | 测试都通过后，把镜像推送到 `ghcr.io/wincent948/fishing-agent`，标签 `latest` 和 `sha-<commit>` |
+
+任何一步失败，PR 上会显示红叉并打印容器日志。发布后可以直接拉取运行：
+
+```bash
+docker pull ghcr.io/wincent948/fishing-agent:latest
+```
 
 ## 学习路线：按这个顺序读代码
 
@@ -239,5 +257,5 @@ python scripts/identify_photo.py ~/Desktop/fish.jpg "这是什么鱼？能留吗
 
 - 真实数据：Fish-Vista 图片 + FishBase（`eval/freeze_gold.py` 已支持）
 - 真实模型：`EMBEDDER=qwen`、`VISION=bioclip`、`GUARD_MODELS=1`、配置 LLM key
-- 工程：Langfuse trace、Compose 里加 LiteLLM、CI 门禁（GitHub Actions 构建镜像 + 跑测试）
+- 工程：Langfuse trace、Compose 里加 LiteLLM、CI 里加评测门禁（`make eval` 通过率低于阈值则失败）
 - 前端：Gradio 界面 + 调试面板（展示路由、工具调用、token），部署到 Hugging Face Spaces
