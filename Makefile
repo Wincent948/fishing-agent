@@ -1,4 +1,4 @@
-.PHONY: data index test eval eval-test ablate api freeze
+.PHONY: data index test eval eval-test ablate api freeze up down mcp mcp-dev
 
 data:
 	python scripts/make_synthetic_data.py
@@ -23,3 +23,15 @@ ablate:
 
 api:
 	uvicorn app.api.server:app --reload
+
+up:
+	docker compose up -d --build
+
+down:
+	docker compose down
+
+mcp:
+	python mcp_server.py
+
+mcp-dev:
+	mcp dev mcp_server.py

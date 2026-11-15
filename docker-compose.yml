@@ -1,0 +1,24 @@
+services:
+  api:
+    build: .
+    image: fishing-agent:latest
+    container_name: fishing-agent-api
+    ports:
+      - "${API_PORT:-8000}:8000"
+    # .env 不入库（见 .gitignore / .dockerignore）；没有 .env 时以离线模式启动
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      # Chroma 索引（.runtime/kb/chroma）、BM25 语料、SQLite 记忆、上传图片都在 .runtime 下
+      - fishing-runtime:/app/.runtime
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+    restart: unless-stopped
+
+volumes:
+  fishing-runtime:
