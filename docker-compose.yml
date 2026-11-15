@@ -9,9 +9,15 @@ services:
     env_file:
       - path: .env
         required: false
+    environment:
+      # LangGraph 对话状态（短期记忆、等待确认的写入）存 Redis：API 重启不丢，多实例共享
+      REDIS_URL: redis://redis:6379/0
     volumes:
       # Chroma 索引（.runtime/kb/chroma）、BM25 语料、SQLite 记忆、上传图片都在 .runtime 下
       - fishing-runtime:/app/.runtime
+    depends_on:
+      redis:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4)"]
       interval: 30s
@@ -20,5 +26,21 @@ services:
       retries: 3
     restart: unless-stopped
 
+  redis:
+    # Redis 8 自带 JSON 和查询引擎（langgraph-checkpoint-redis 需要）
+    image: redis:8
+    container_name: fishing-agent-redis
+    # AOF 持久化：Redis 容器重启后数据仍在；不对宿主机暴露端口，只供 api 在内部网络访问
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
 volumes:
   fishing-runtime:
+  redis-data:

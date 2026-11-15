@@ -25,6 +25,7 @@ from langgraph.types import Command, interrupt
 from app import config as settings
 from app.agents import compliance, identify, knowledge, planner
 from app.graph import workflows as W
+from app.graph.checkpoint import make_checkpointer
 from app.graph.router import route
 from app.guards import action as action_guard
 from app.guards import input as input_guard
@@ -269,4 +270,4 @@ def build_graph(checkpointer=None):
     return g.compile(checkpointer=checkpointer or MemorySaver())
 
 
-GRAPH = build_graph()
+GRAPH = build_graph(make_checkpointer())   # REDIS_URL 有值 → Redis；否则内存（原行为）

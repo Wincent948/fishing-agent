@@ -27,6 +27,8 @@ from pydantic import BaseModel, Field
 
 from app import config
 from app.api.sse import sse, stream_turn
+from app.graph.checkpoint import checkpointer_kind
+from app.graph.main_graph import GRAPH
 from app.memory import store
 from app.service import run_turn
 
@@ -133,7 +135,8 @@ def delete_memory(uid: str = Depends(current_user)):
 @app.get("/healthz")
 def healthz():
     kb_ok = (config.RUNTIME / "kb" / "manifest.json").exists()
-    return {"ok": True, "kb_index": kb_ok, "offline_mode": config.OFFLINE, "fixture_mode": config.FIXTURE_MODE}
+    return {"ok": True, "kb_index": kb_ok, "offline_mode": config.OFFLINE, "fixture_mode": config.FIXTURE_MODE,
+            "checkpointer": checkpointer_kind(GRAPH.checkpointer)}
 
 
 # ---------------- SSE 流式对话：与 /v1/chat 同一套鉴权、限流和字段裁剪，只是改成边跑边推

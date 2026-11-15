@@ -59,7 +59,7 @@ make mcp-dev   # 用 MCP Inspector 调试 MCP server（需要 uv 和 Node）
           └───────────────┬──────────────────────────┬──────────────────┘
                           │ run_turn / stream_turn    │ 直接调用工具
                           ▼                           ▼
-   LangGraph 主图（护栏 → 记忆 → 路由 → Workflow / 子 Agent → 输出护栏）
+   LangGraph 主图（护栏 → 记忆 → 路由 → Workflow / 子 Agent → 输出护栏）── 对话状态 ─▶ Redis（可选）
                           │
                           ▼
    工具层 app/tools（统一外壳：校验、超时、重试、熔断、预算、埋点）
@@ -88,6 +88,16 @@ curl -N -X POST localhost:8000/chat -H "Authorization: Bearer $TOKEN" -H 'Conten
 ### 2. Docker 部署（`Dockerfile`、`docker-compose.yml`）
 
 镜像基于 `python:3.12-slim`，以非 root 用户运行；`docker/entrypoint.sh` 发现没有索引时先建库再起 uvicorn。`.runtime/`（Chroma 索引、BM25 语料、SQLite 长期记忆、上传图片）挂在命名卷 `fishing-runtime` 上，`docker compose down` 后数据仍在，`docker compose down -v` 才会清空。`.env` 被 `.gitignore` 和 `.dockerignore` 同时排除，compose 以 `env_file`（`required: false`）在运行时注入。healthcheck 每 30 秒请求一次 `/health`。
+
+**Redis 保存对话状态**：compose 里同时启动 `redis`（Redis 8，AOF 持久化，数据卷 `redis-data`，不对外暴露端口），API 等它健康后才启动。LangGraph 的短期记忆（多轮槽位、等待确认的写入）通过 `REDIS_URL` 存进 Redis（`app/graph/checkpoint.py`），默认保留 7 天（`CHECKPOINT_TTL_MIN`）：
+
+| 场景 | 内存（不设 `REDIS_URL`） | Redis（compose 默认） |
+| --- | --- | --- |
+| 发起「记录渔获」→ 重启 API → 确认 | 状态丢失，确认被当成空输入 | 正常写入 |
+| Redis 自身重启 | — | 状态仍在（AOF） |
+| 多个 API 实例 | 各自一份，互相看不到 | 共享同一份对话状态 |
+
+不设 `REDIS_URL` 时行为与原来完全一致，本地开发、单测、评测和魔搭演示不受影响；`/health` 的 `checkpointer` 字段显示当前用的是哪种。
 
 ### 3. MCP server（`mcp_server.py`）
 
@@ -229,5 +239,5 @@ python scripts/identify_photo.py ~/Desktop/fish.jpg "这是什么鱼？能留吗
 
 - 真实数据：Fish-Vista 图片 + FishBase（`eval/freeze_gold.py` 已支持）
 - 真实模型：`EMBEDDER=qwen`、`VISION=bioclip`、`GUARD_MODELS=1`、配置 LLM key
-- 工程：Langfuse trace、Compose 里加 Redis checkpointer 与 LiteLLM、CI 门禁
+- 工程：Langfuse trace、Compose 里加 LiteLLM、CI 门禁（GitHub Actions 构建镜像 + 跑测试）
 - 前端：Gradio 界面 + 调试面板（展示路由、工具调用、token），部署到 Hugging Face Spaces
